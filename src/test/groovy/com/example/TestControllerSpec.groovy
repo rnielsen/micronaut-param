@@ -14,7 +14,7 @@ import spock.lang.Shared
 import spock.lang.AutoCleanup
 import io.micronaut.function.aws.proxy.MicronautLambdaHandler
 
-class BookControllerSpec extends Specification {
+class TestControllerSpec extends Specification {
 
     @Shared
     @AutoCleanup
@@ -26,27 +26,20 @@ class BookControllerSpec extends Specification {
     @Shared
     ObjectMapper objectMapper = handler.applicationContext.getBean(ObjectMapper)
 
-    void "test save Book"() {
+    void "test string params"() {
         given:
-        Book book = new Book()
-        book.name = "Building Microservices"
-        String json = objectMapper.writeValueAsString(book)
+        String json = objectMapper.writeValueAsString(["a":"A","b":"B","c":"C"])
 
         when:
-        AwsProxyRequest request = new AwsProxyRequestBuilder("/", HttpMethod.POST.toString())
+        AwsProxyRequest request = new AwsProxyRequestBuilder("/stringParams", HttpMethod.POST.toString())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .body(json).build()
         AwsProxyResponse response = handler.handleRequest(request, lambdaContext)
 
         then:
         HttpStatus.OK.code == response.statusCode
-        response.body
-
-        when:
-        BookSaved bookSaved = objectMapper.readValue(response.body, BookSaved)
-
-        then:
-        bookSaved.name == book.name
-        bookSaved.isbn
+        println response.body
+        Map map = objectMapper.readValue(response.body, Map)
+        map == ["a":"A", "b":"B"]
     }
 }

@@ -21,7 +21,6 @@ micronaut {
 }
 
 dependencies {
-    implementation("io.micronaut.aws:micronaut-function-aws-api-proxy")
     implementation("io.micronaut.groovy:micronaut-runtime-groovy")
     implementation("javax.annotation:javax.annotation-api")
     runtimeOnly("ch.qos.logback:logback-classic")
