@@ -21,6 +21,7 @@ micronaut {
 }
 
 dependencies {
+    implementation("io.micronaut.aws:micronaut-function-aws-api-proxy")
     implementation("io.micronaut.groovy:micronaut-runtime-groovy")
     implementation("javax.annotation:javax.annotation-api")
     runtimeOnly("ch.qos.logback:logback-classic")
@@ -32,6 +33,13 @@ dependencies {
 
 }
 
+task buildZip(type: Zip) {
+    from sourceSets.main.output
+    into('lib') {
+        from configurations.compileClasspath
+        from configurations.runtimeClasspath
+    }
+}
 
 application {
     mainClass.set("com.example.Application")

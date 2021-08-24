@@ -1,0 +1,19 @@
+service: micronaut-param
+
+provider:
+    name: aws
+    runtime: java11
+    stage: dev
+    region: ap-southeast-2
+    timeout: 30
+
+package:
+    artifact: build/distributions/micronaut-param-0.1.zip
+
+functions:
+    api:
+        handler: io.micronaut.function.aws.proxy.MicronautLambdaHandler
+        events:
+            - http:
+                  path: /{proxy+}
+                  method: any
